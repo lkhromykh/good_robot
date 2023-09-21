@@ -10,7 +10,7 @@ class RobotiqCGripper:
         self.speed = speed
         self.force = force
         self.gripper = RobotiqGripper()
-        self._pos = 255
+        self._pos = 0
         self._status = RobotiqGripper.ObjectStatus.AT_DEST
 
     def wait_for_connection(self) -> bool:
@@ -18,6 +18,8 @@ class RobotiqCGripper:
 
     def reset(self) -> None:
         self.gripper._reset()
+        self._pos = 0
+        self._status = RobotiqGripper.ObjectStatus.AT_DEST
 
     def activate(self, timeout: float = 30) -> bool:
         del timeout
@@ -41,7 +43,10 @@ class RobotiqCGripper:
         self.gripper.move_and_wait_for_pos(pos, self.speed, self.force)
 
     def object_detected(self) -> bool:
-        return self._status == RobotiqGripper.ObjectStatus.STOPPED_INNER_OBJECT
+        return self._status in (
+            RobotiqGripper.ObjectStatus.STOPPED_INNER_OBJECT,
+            RobotiqGripper.ObjectStatus.STOPPED_OUTER_OBJECT
+        )
 
     def is_opened(self) -> bool:
         return self.gripper.is_open()
