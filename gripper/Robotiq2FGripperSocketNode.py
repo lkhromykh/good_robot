@@ -40,7 +40,8 @@ class RobotiqCGripper:
     def close(self, vel=0.1, force=100, block=False, timeout=10) -> None:
         del vel, force, block, timeout
         pos = self.gripper.get_closed_position()
-        self.gripper.move_and_wait_for_pos(pos, self.speed, self.force)
+        self._blocking_move(pos)
+        return True
 
     def object_detected(self) -> bool:
         return self._status in (
