@@ -4,7 +4,7 @@ import socket
 import threading
 import time
 from enum import Enum
-from typing import Union, Tuple, OrderedDict
+from collections import OrderedDict
 
 class RobotiqGripper:
     """
@@ -65,7 +65,7 @@ class RobotiqGripper:
         """Closes the connection with the gripper."""
         self.socket.close()
 
-    def _set_vars(self, var_dict: OrderedDict[str, Union[int, float]]):
+    def _set_vars(self, var_dict):
         """Sends the appropriate command via socket to set the value of n variables, and waits for its 'ack' response.
         :param var_dict: Dictionary of variables to set (variable_name, value).
         :return: True on successful reception of ack, false if no ack was received, indicating the set may not
@@ -82,7 +82,7 @@ class RobotiqGripper:
             data = self.socket.recv(1024)
         return self._is_ack(data)
 
-    def _set_var(self, variable: str, value: Union[int, float]):
+    def _set_var(self, variable: str, value: float):
         """Sends the appropriate command via socket to set the value of a variable, and waits for its 'ack' response.
         :param variable: Variable to set.
         :param value: Value to set for the variable.
@@ -242,7 +242,7 @@ class RobotiqGripper:
         if log:
             print(f"Gripper auto-calibrated to [{self.get_min_position()}, {self.get_max_position()}]")
 
-    def move(self, position: int, speed: int, force: int) -> Tuple[bool, int]:
+    def move(self, position: int, speed: int, force: int):
         """Sends commands to start moving towards the given position, with the specified speed and force.
         :param position: Position to move to [min_position, max_position]
         :param speed: Speed to move at [min_speed, max_speed]
@@ -262,7 +262,7 @@ class RobotiqGripper:
         var_dict = OrderedDict([(self.POS, clip_pos), (self.SPE, clip_spe), (self.FOR, clip_for), (self.GTO, 1)])
         return self._set_vars(var_dict), clip_pos
 
-    def move_and_wait_for_pos(self, position: int, speed: int, force: int) -> Tuple[int, ObjectStatus]:  # noqa
+    def move_and_wait_for_pos(self, position: int, speed: int, force: int):  # noqa
         """Sends commands to start moving towards the given position, with the specified speed and force, and
         then waits for the move to complete.
         :param position: Position to move to [min_position, max_position]

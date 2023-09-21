@@ -10,13 +10,14 @@ class RobotiqCGripper:
         self.speed = speed
         self.force = force
         self.gripper = RobotiqGripper()
+        self._pos = 255
+        self._status = RobotiqGripper.ObjectStatus.AT_DEST
 
     def wait_for_connection(self) -> bool:
         self.gripper.connect(self.gripper_ip, RobotiqCGripper.PORT)
 
     def reset(self) -> None:
         self.gripper._reset()
-        self.close()
 
     def activate(self, timeout: float = 30) -> bool:
         del timeout
@@ -26,7 +27,6 @@ class RobotiqCGripper:
     def stop(self, block: bool, timeout: float) -> bool:
         # This is used to update the cur state.
         del block, timeout
-        self._blocking_move(self._pos)
         return True
 
     def open(self, vel=0.1, force=100, block=False, timeout=10) -> None:
