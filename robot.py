@@ -10,13 +10,15 @@ import traceback
 import copy
 from simulation import vrep
 from scipy import ndimage, misc
-try:
-    from gripper.robotiq_2f_gripper_ctrl import RobotiqCGripper
-except ImportError:
-    print('Real robotiq gripper control is not available. '
-          'Ensure pymodbus is installed:\n'
-          '    pip3 install --user --upgrade pymodbus\n')
-    RobotiqCGripper = None
+
+from gripper.Robotiq2FGripperSocketNode import RobotiqCGripper
+# try:
+#     from gripper.robotiq_2f_gripper_ctrl import RobotiqCGripper
+# except ImportError:
+#     print('Real robotiq gripper control is not available. '
+#           'Ensure pymodbus is installed:\n'
+#           '    pip3 install --user --upgrade pymodbus\n')
+#     RobotiqCGripper = None
 
 def gripper_control_pose_to_arm_control_pose(gripper_translation, gripper_orientation, gripper_to_arm_transform=None):
         # arm_trans = np.eye(4,4)
